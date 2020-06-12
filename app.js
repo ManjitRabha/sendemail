@@ -5,6 +5,7 @@ const bodyparser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const favicon = require('serve-favicon');
+const createError = require('http-errors');
 
 // initialize serve-favicon
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -42,5 +43,15 @@ app.use('/', indexRouter);
 
 
 
+// Catch 404 and forward to error handler
+app.use((req, res, next) => {
+    next(new createError.NotFound());
+});
+// error handler
+app.use((err, req, res, next) => {
+    // render error page
+    res.status(err.status || 500)
+    res.render('error', { err })
+})
 
 app.listen(PORT, () => console.log(`Application is running Port@=> ${PORT}`));
